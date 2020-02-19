@@ -30,10 +30,18 @@ public function ingredients()
     
 
 
-
 public function register(Request $request)
     {
         try {
+
+            $exists = Profile::where('name', $request->name)->first();
+
+            if ($exists == null) {
+                return response()->json([
+                    'message' => "email already used"
+                ], 401);
+            }
+
             $profile = new self();
             $profile->name = $request->name;
             $user_inv = new User();
@@ -98,7 +106,12 @@ public function register(Request $request)
 
             $profile = self::find($request->profile_id);
 
-            $ingredient->profiles()->attach($request->ingredient_id);
+            for ($i=0; $i < count($request->ingredient_id); $i++) { 
+                
+            $ingredient->profiles()->attach($request->ingredient_id[$i]);
+
+            }
+
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"

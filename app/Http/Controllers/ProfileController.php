@@ -29,6 +29,8 @@ class ProfileController extends Controller
 
     public function remove(Request $request)
     {
+
+
        DB::delete('delete from profiles where id = ' . $request->prfile_id);
     }
 
@@ -61,7 +63,7 @@ class ProfileController extends Controller
 
     public function assign_ingredient(Request $request)
     {
-        $ingredient_inv = new Ingredient();
+        $ingredient_inv = new Profile();
 
         return $ingredient_inv->assign_ingredient($request);
     }

@@ -23,14 +23,6 @@ class UserController extends Controller
 
     }
 
-    public function rename(Request $request) {
-
-        $users_inv = new User();
-
-        return $users_inv->rename($request);
-
-    }
-
     public function login(Request $request)
     {
         $users_inv = new User();
@@ -54,7 +46,20 @@ class UserController extends Controller
 
     public function remove(Request $request)
     {
-       DB::delete('delete from users where id = ' . $request->user_id);
+        $users_inv = new User();
+
+        $user = $users_inv->get_logged_user($request);
+
+        if ($user->email == "admin@salvamanteles.com") {
+            DB::delete('delete from users where id = ' . $request->user_id);
+            return 200;
+        } else {
+            return response()->json([
+                'message' => "access unautorized"
+            ], 401);
+        }
+
+       
     }
 
 

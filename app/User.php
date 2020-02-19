@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Token;
 use App\Application;
+use App\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,14 @@ class User extends Model
             $user->password = Hash::make($request->password);
             $user->changed = 0;
             $user->save();
-    
+
+
+            $profile = new Profile();
+
+            $profile->name = $request->name;
+            $profile->user_id = $user->id;
+            $profile->save();
+
             return $this->getTokenFromUser($user);        
         } catch (\Throwable $th) {
             return response()->json([
@@ -112,26 +120,6 @@ class User extends Model
         $decoded_token = $token_inv->decode_token($coded_token);
         $user = User::where('email', $decoded_token[0])->first();
         return $user;
-    }
-
-    public function rename(Request $request)
-    {
-        try {
-
-            $affected = DB::table('users')
-            ->where('id', $request->user_id)
-            ->update(['name' => $request->name]);
-              
-            return response()->json([
-               200
-            ], 200);       
-        } catch (\Throwable $th) {
-            return response()->json([
-                'message' => "wrong data"
-            ], 401);
-       }
-    
-
     }
 
     public function change_password(Request $request)
