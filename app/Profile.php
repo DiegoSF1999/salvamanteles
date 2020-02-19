@@ -32,26 +32,26 @@ public function ingredients()
 
 public function register(Request $request)
     {
-        try {
+      try {
 
-            $exists = Profile::where('name', $request->name)->first();
+            $user_inv = new User();
+            $user = $user_inv->get_logged_user($request);
 
-            if ($exists == null) {
+            $exists = Profile::where('name', $request->name)->where('user_id', $user->id)->first();
+
+            if ($exists != null) {
                 return response()->json([
-                    'message' => "email already used"
+                    'message' => "name already used"
                 ], 401);
             }
 
             $profile = new self();
             $profile->name = $request->name;
-            $user_inv = new User();
-            $user = $user_inv->get_logged_user();
+           
             $profile->user_id = $user->id;
             $profile->save();
               
-            return response()->json([
-                'profile_id' => $profile->id
-            ], 200);       
+            return 200;      
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
@@ -63,20 +63,29 @@ public function register(Request $request)
 
     public function rename(Request $request)
     {
-        try {
+       // try {
 
-            $affected = DB::table('profiles')
-            ->where('id', $request->profile_id)
-            ->update(['name' => $request->name]);
+            $user_inv = new User();
+            $user = $user_inv->get_logged_user($request);
+
+            $exists = Profile::where('name', $request->new_name)->where('user_id', $user->id)->first();
+
+            if ($exists != null) {
+                return response()->json([
+                    'message' => "name already used"
+                ], 401);
+            }
+
+            $affected = Profile::where('user_id', $user->id)
+            ->where('name', $request->name)
+            ->update(['name' => $request->new_name]);
               
-            return response()->json([
-               200
-            ], 200);       
-        } catch (\Throwable $th) {
+            return 200;       
+      /*  } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
+       }*/
     
 
     }
@@ -88,9 +97,7 @@ public function register(Request $request)
 
             $this->find($request->profile_id)->ingredients()->find($request->ingredient_id)->delete();
               
-            return response()->json([
-               200
-            ], 200);       
+            return 200;    
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
@@ -117,6 +124,35 @@ public function register(Request $request)
                 'message' => "wrong data"
             ], 401);
         }
+    }
+
+    public function remove(Request $request)
+    {
+
+       // try {
+
+            $user_inv = new User();
+            $user = $user_inv->get_logged_user($request);
+
+            $exists = Profile::where('name', $request->name)->where('user_id', $user->id)->first();
+
+            if ($exists == null) {
+                return response()->json([
+                    'message' => "profile does not exists"
+                ], 401);
+            }
+
+            $affected = Profile::
+            where('user_id', $user->id)
+            ->where('name', $request->name)
+            ->delete();
+              
+            return 200;       
+       /* } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "wrong data"
+            ], 401);
+       }*/
     }
 
     

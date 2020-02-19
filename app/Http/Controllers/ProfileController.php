@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Profile;
+use App\User;
 
 class ProfileController extends Controller
 {
@@ -15,6 +16,15 @@ class ProfileController extends Controller
     public function index()
     {
         return json_encode(Profile::all());
+    }
+
+    public function get_my_profiles(Request $request)
+    {
+        $user_inv = new User();
+
+        $user = $user_inv->get_logged_user($request);
+
+        return Profile::where('user_id', $user->id)->get();
     }
 
     /**
@@ -31,7 +41,9 @@ class ProfileController extends Controller
     {
 
 
-       DB::delete('delete from profiles where id = ' . $request->prfile_id);
+        $profile_inv = new Profile();
+
+        return $profile_inv->remove($request);
     }
 
     /**

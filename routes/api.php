@@ -23,7 +23,9 @@ Route::post('removeUser', 'UserController@remove')->middleware('token');
             /////   Profiles/Comensales   /////
 
 
-Route::post('getAllProfiles', 'ProfileController@index')->middleware('token');
+Route::get('getAllProfiles', 'ProfileController@index')->middleware('token');
+
+Route::get('getProfiles', 'ProfileController@get_my_profiles')->middleware('token');
 
 Route::post('removeProfile', 'ProfileController@remove')->middleware('token');
 
