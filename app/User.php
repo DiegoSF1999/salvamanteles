@@ -39,6 +39,9 @@ class User extends Model
             $profile->user_id = $user->id;
             $profile->save();
 
+
+            $profile = Profile::find($profile->id);
+
             return $this->getTokenFromUser($user);        
         } catch (\Throwable $th) {
             return response()->json([
@@ -149,6 +152,30 @@ class User extends Model
         
         
 
+
+    }
+
+    public function remove(Request $request)
+    {
+        try {
+
+            if ($request->admin_key == "saddfssf43132423432f") {
+
+                $user =  User::find($request->user_id)->delete();
+              
+                return 200;    
+            } else {
+                return response()->json([
+                    'message' => "access unautorized"
+                ], 401);
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "wrong data"
+            ], 401);
+       }
+    
 
     }
 

@@ -17,10 +17,14 @@ class CreateRestaurantsOfferingDishesTable extends Migration
             $table->integer('restaurant_id')->unsigned();
             $table->integer('dish_id')->unsigned();
             $table->foreign('restaurant_id')
-                            ->references('id')->on('restaurants')->onUpdate('cascade');
+                            ->references('id')->on('restaurants')->onUpdate('cascade')
+                            ->onDelete('cascade');
             $table->foreign('dish_id')
-                            ->references('id')->on('dishes')->onUpdate('cascade');
+                            ->references('id')->on('dishes')->onUpdate('cascade')
+                            ->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['restaurant_id', 'dish_id']);    
         });
     }
 

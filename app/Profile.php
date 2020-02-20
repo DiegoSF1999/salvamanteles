@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
+use App\Ingredient;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -50,6 +51,7 @@ public function register(Request $request)
            
             $profile->user_id = $user->id;
             $profile->save();
+
               
             return 200;      
         } catch (\Throwable $th) {
@@ -63,7 +65,7 @@ public function register(Request $request)
 
     public function rename(Request $request)
     {
-       // try {
+        try {
 
             $user_inv = new User();
             $user = $user_inv->get_logged_user($request);
@@ -81,11 +83,11 @@ public function register(Request $request)
             ->update(['name' => $request->new_name]);
               
             return 200;       
-      /*  } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }*/
+       }
     
 
     }
@@ -111,13 +113,24 @@ public function register(Request $request)
 
         try {
 
-            $profile = self::find($request->profile_id);
+            $user_inv = new User();
+            $user = $user_inv->get_logged_user($request);
 
-            for ($i=0; $i < count($request->ingredient_id); $i++) { 
+            $profile = Profile::where('name', $request->name)->where('user_id', $user->id)->first();
+
+
+
+            for ($i=0; $i < count($request->ingredient_names); $i++) { 
                 
-            $ingredient->profiles()->attach($request->ingredient_id[$i]);
+                $ingredient = Ingredient::where('name', $request->ingredient_names[$i])->first();
+
+                $profile->ingredients()->attach($ingredient->id);
+
 
             }
+        
+
+            return 200;            
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -129,7 +142,7 @@ public function register(Request $request)
     public function remove(Request $request)
     {
 
-       // try {
+        try {
 
             $user_inv = new User();
             $user = $user_inv->get_logged_user($request);
@@ -148,11 +161,11 @@ public function register(Request $request)
             ->delete();
               
             return 200;       
-       /* } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }*/
+       }
     }
 
     

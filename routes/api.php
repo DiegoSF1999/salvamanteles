@@ -38,6 +38,17 @@ Route::post('removeIngredientFromProfile', 'ProfileController@remove_ingredient'
 Route::post('assignIngredientToProfile', 'ProfileController@assign_ingredient')->middleware('token');
 
 
+            /////   Ingredients Family   /////
+
+
+Route::post('createFamily', 'IngredientFamilyController@store')->middleware('token');
+
+            /////   Ingredients   /////
+
+Route::post('createIngredient', 'IngredientController@store')->middleware('token');
+    
+
+
 Route::get('restaurantToBBDD', 'RestaurantController@index');
 
 Route::group(['middleware' => ['auth']], function () {

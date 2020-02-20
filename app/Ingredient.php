@@ -10,7 +10,7 @@ class Ingredient extends Model
     protected $table = 'ingredients';
 
     protected $fillable = [
-        'name', 'description'
+        'name',
     ];
 
     public function profiles()
@@ -33,13 +33,25 @@ class Ingredient extends Model
     public function register(Request $request)
     {
         try {
+
+            if ($request->admin_key == "saddfssf43132423432f") {
             $ingredient = new self();
-            $ingredient->name = $request->name;
-            $ingredient->description = $request->description;
-            $profile->save();
+            $ingredient->name = $request->ingredient_name;
+            $ingredient->save();
+
+            for ($i=0; $i < count($request->family_names); $i++) { 
+                $family = DB::table('ingredients_family')->where('name', $request->family_names[$i])->first();
+                $ingredient->families()->attach($family->id);
+            }      
               
-            return response()->json([200
-            ], 200);       
+            return 200;
+
+        } else {
+            return response()->json([
+                'message' => "access unautorized"
+            ], 401);
+        }
+
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"

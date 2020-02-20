@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Ingredient_Family extends Model
 {
@@ -12,6 +13,8 @@ class Ingredient_Family extends Model
     protected $fillable = [
         'name',
     ];
+
+    public $timestamps = false;
 
     public function ingredients()
     {
@@ -22,12 +25,20 @@ class Ingredient_Family extends Model
     public function register(Request $request)
     {
         try {
-            $ingredient_family = new self();
-            $ingredient_family->name = $request->name;
-            $ingredient_family->save();
-              
-            return response()->json([200
-            ], 200);       
+
+            if ($request->admin_key == "saddfssf43132423432f") {
+
+                $ingredient_family = new self();
+                $ingredient_family->name = $request->family_name;
+                $ingredient_family->save();
+                  
+                return 200;
+            } else {
+                return response()->json([
+                    'message' => "access unautorized"
+                ], 401);
+            }
+                
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
@@ -46,9 +57,7 @@ class Ingredient_Family extends Model
             ->where('id', $request->ingredient_family_id)
             ->update(['name' => $request->name]);
               
-            return response()->json([
-               200
-            ], 200);       
+            return 200;       
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
@@ -66,6 +75,9 @@ class Ingredient_Family extends Model
             $family = self::find($request->ingredient_family_id);
 
             $family->ingredients()->attach($request->ingredient_id);
+
+            return 200;
+
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"

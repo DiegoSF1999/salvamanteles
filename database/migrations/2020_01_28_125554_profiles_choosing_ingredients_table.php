@@ -17,9 +17,15 @@ class ProfilesChoosingIngredientsTable extends Migration
             $table->integer('profile_id')->unsigned();
             $table->integer('ingredient_id')->unsigned();
             $table->foreign('profile_id')
-                            ->references('id')->on('profiles');
+                            ->references('id')->on('profiles')
+                            ->onUpdate('cascade')
+                            ->onDelete('cascade');
             $table->foreign('ingredient_id')
-                            ->references('id')->on('ingredients');
+                            ->references('id')->on('ingredients')
+                            ->onUpdate('cascade')
+                            ->onDelete('cascade');
+
+            $table->unique(['profile_id', 'ingredient_id']);                 
         });
     }
 
