@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Ingredient extends Model
 {
@@ -20,7 +21,7 @@ class Ingredient extends Model
 
     public function families()
     {
-        return $this->belongsToMany('App\Ingredient_Family', 'ingredients_from_family', 'ingredient_id', 'ingredient_family_id');
+        return $this->belongsToMany('App\Ingredient_Family', 'ingredients_from_family', 'ingredient_id', 'ingredient_family_id')->withTimestamps();
     }
 
     public function dishes()
@@ -28,7 +29,7 @@ class Ingredient extends Model
         return $this->belongsToMany('App\Dish', 'dishes_containing_ingredients', 'ingredient_id', 'dish_id');
     }
 
-
+    public $timestamps = false;
 
     public function register(Request $request)
     {
@@ -210,9 +211,7 @@ class Ingredient extends Model
             ->where('id', $request->ingredient_id)
             ->update(['name' => $request->name]);
               
-            return response()->json([
-               200
-            ], 200);       
+            return 200;      
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
@@ -222,7 +221,24 @@ class Ingredient extends Model
 
     }
 
+    public function get_my_ingredients(Request $request)
+    {
+        try {
 
+            $profile = DB::table('profiles')
+            ->where('name', $request->name)
+            ->first();
+
+              
+            return $profile->ingredients()->get();     
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => "wrong data"
+            ], 401);
+       }
+    
+
+    }
 
 
            

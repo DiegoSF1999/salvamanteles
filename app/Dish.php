@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Restaurant;
 
 class Dish extends Model
 {
@@ -25,7 +27,6 @@ class Dish extends Model
 
     public function assign_restaurant(Request $request) {
 
-
         try {
 
             $dish = self::find($request->dish_id);
@@ -42,14 +43,17 @@ class Dish extends Model
     {
         try {
             $dish = new self();
-            $dish->name = $request->name;
+            $dish->name = $request->dish_name;
             $dish->type = $request->type;
             $dish->description = $request->description;
 
             $dish->save();
+
+            $restaurant = Restaurant::where('name', $request->restaurant_name)->first();
+
+            $dish->restaurants()->attach($restaurant->id);
               
-            return response()->json([200
-            ], 200);       
+            return 200;       
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"

@@ -25,13 +25,11 @@ class Restaurant extends Model
     {
         try {
             $restaurant = new self();
-            $restaurant->name = $request->name;
+            $restaurant->name = $request->restaurant_name;
             $restaurant->icon = $request->icon;
             $restaurant->save();
               
-            return response()->json([
-               200
-            ], 200);       
+            return 200;     
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"

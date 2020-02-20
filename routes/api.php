@@ -47,7 +47,13 @@ Route::post('createFamily', 'IngredientFamilyController@store')->middleware('tok
 
 Route::post('createIngredient', 'IngredientController@store')->middleware('token');
     
+            /////   Dishes   /////
 
+Route::post('createDish', 'DishController@store')->middleware('token');
+
+            /////   Restaurants   /////
+Route::post('createRestaurant', 'RestaurantController@store')->middleware('token');
+    
 
 Route::get('restaurantToBBDD', 'RestaurantController@index');
 

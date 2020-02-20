@@ -18,7 +18,7 @@ class Ingredient_Family extends Model
 
     public function ingredients()
     {
-        return $this->belongsToMany('App\Ingredient', 'ingredients_from_family', 'ingredient_family_id' , 'ingredient_id');
+        return $this->belongsToMany('App\Ingredient', 'ingredients_from_family', 'ingredient_family_id' , 'ingredient_id')->withTimestamps();
     }
 
 

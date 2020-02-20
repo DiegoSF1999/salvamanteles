@@ -27,6 +27,12 @@ class IngredientController extends Controller
         //
     }
 
+    public function get_my_ingredients(Request $request)
+    {
+        return $ingredient_inv->get_my_ingredients($request);
+    }
+
+
     public function remove(Request $request)
     {
        DB::delete('delete from ingredients where id = ' . $request->ingredient_id);
