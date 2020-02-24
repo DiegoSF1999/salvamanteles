@@ -5,6 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\User;
 use App\Ingredient;
+use App\Dish;
+use App\Ingredient_Family;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -169,7 +171,54 @@ public function register(Request $request)
     }
 
     
+    public function get_my_food(Request $request)
+    {
+        /*  $prohibited_ingredients = DB::table('users')
+    ->whereNotIn('id', [1, 2, 3])
+    ->get();
+*/
 
-    
+$user_inv = new User();
+$user = $user_inv->get_logged_user($request);
 
+
+$profile = Profile::where('name', $request->name)->where('user_id', $user->id)->first();
+
+$array_ingredients_name = [];
+
+$my_ingredients = $profile->ingredients()->get();
+
+for ($i=0; $i < count($my_ingredients); $i++) { 
+    array_push($array_ingredients_name, $my_ingredients[$i]->name);
+}
+
+   // return DB::select('SELECT * FROM ingredients WHERE NOT ingredients.name = (' . implode(',', $array_ingredients_name) . ')');
+            
+  //  return Ingredient::whereNotIn('name', $array_ingredients_name)->get();
+
+    //return $array_ingredients_name;
+
+    $basura = [];
+    $basura2 = [];
+
+    for ($i=0; $i < count($my_ingredients); $i++) { 
+        
+ array_push($basura, $my_ingredients[$i]->dishes()->get()[0]->name);
+
+    }
+
+
+$basura = array_unique($basura);
+
+
+
+
+return Dish::whereNotIn('name', $basura)->get();
+
+
+
+        // ya tengo los platos que si puede tomar. ahora hay que ordenarlo por categoria
+
+
+    }
 }

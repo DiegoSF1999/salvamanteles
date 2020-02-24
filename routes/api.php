@@ -37,6 +37,8 @@ Route::post('removeIngredientFromProfile', 'ProfileController@remove_ingredient'
 
 Route::post('assignIngredientToProfile', 'ProfileController@assign_ingredient')->middleware('token');
 
+Route::post('getFinalFood', 'ProfileController@get_my_food')->middleware('token');
+ 
 
             /////   Ingredients Family   /////
 

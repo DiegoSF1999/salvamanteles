@@ -59,6 +59,13 @@ class ProfileController extends Controller
         return $profile_inv->register($request);
     }
 
+    public function get_my_food(Request $request)
+    {
+        $profile_inv = new Profile();
+
+        return $profile_inv->get_my_food($request);
+    }
+
     public function rename(Request $request)
     {
         $profile_inv = new Profile();

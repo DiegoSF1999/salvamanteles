@@ -42,6 +42,10 @@ class Dish extends Model
     public function register(Request $request)
     {
         try {
+
+            $restaurant = Restaurant::where('name', $request->restaurant_name)->first();
+
+
             $dish = new self();
             $dish->name = $request->dish_name;
             $dish->type = $request->type;
@@ -49,16 +53,21 @@ class Dish extends Model
 
             $dish->save();
 
-            $restaurant = Restaurant::where('name', $request->restaurant_name)->first();
-
+          
             $dish->restaurants()->attach($restaurant->id);
+
+            for ($i=0; $i < count($request->ingredient_names); $i++) { 
+                $ingredient = DB::table('ingredients')->where('name', $request->ingredient_names[$i])->first();
+                $dish->ingredients()->attach($ingredient->id);
+            } 
+
               
             return 200;       
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
+       }    
     
 
     }
