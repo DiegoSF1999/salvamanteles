@@ -27,8 +27,18 @@ class IngredientController extends Controller
         //
     }
 
+    public function get_listed_ingredients(Request $request)
+    {
+        $ingredient_inv = new Ingredient();
+
+        return $ingredient_inv->get_listed_ingredients($request);
+    }
+    
+
     public function get_my_ingredients(Request $request)
     {
+        $ingredient_inv = new Ingredient();
+
         return $ingredient_inv->get_my_ingredients($request);
     }
 

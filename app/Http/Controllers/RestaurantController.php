@@ -15,8 +15,7 @@ class RestaurantController extends Controller
      */
     public function index()
     {
-        $reader_inv = new RestaurantReader();
-        $reader_inv->Execute();
+        return json_encode(Restaurant::all());
     }
 
     /**

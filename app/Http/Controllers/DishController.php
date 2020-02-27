@@ -14,7 +14,7 @@ class DishController extends Controller
      */
     public function index()
     {
-        return json_encode(Ingredient::all());
+        return json_encode(Dish::all());
     }
 
     /**

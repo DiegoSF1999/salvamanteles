@@ -48,14 +48,19 @@ Route::post('createFamily', 'IngredientFamilyController@store')->middleware('tok
             /////   Ingredients   /////
 
 Route::post('createIngredient', 'IngredientController@store')->middleware('token');
-    
+Route::get('getAllIngredients', 'IngredientController@index')->middleware('token');
+Route::get('getListedIngredients', 'IngredientController@get_listed_ingredients')->middleware('token');
+
+
+
             /////   Dishes   /////
 
 Route::post('createDish', 'DishController@store')->middleware('token');
 
             /////   Restaurants   /////
 Route::post('createRestaurant', 'RestaurantController@store')->middleware('token');
-    
+Route::get('getRestaurants', 'RestaurantController@index')->middleware('token');
+
 
 Route::get('restaurantToBBDD', 'RestaurantController@index');
 
