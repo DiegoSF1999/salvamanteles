@@ -18,9 +18,6 @@ class Restaurant extends Model
         return $this->belongsToMany('App\Dish', 'restaurants_offering_dishes', 'restaurant_id', 'dish_id');
     }
 
-
-
-
     public function register(Request $request)
     {
         try {
@@ -28,36 +25,31 @@ class Restaurant extends Model
             $restaurant->name = $request->restaurant_name;
             $restaurant->icon = $request->icon;
             $restaurant->save();
-              
-            return 200;     
+
+            return 200;
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
-
 
     public function rename(Request $request)
     {
         try {
 
             $affected = DB::table('restaurants')
-            ->where('id', $request->restaurant_id)
-            ->update(['name' => $request->name]);
-              
+                ->where('id', $request->restaurant_id)
+                ->update(['name' => $request->name]);
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
     public function change_icon(Request $request)
@@ -65,19 +57,17 @@ class Restaurant extends Model
         try {
 
             $affected = DB::table('restaurants')
-            ->where('id', $request->restaurant_id)
-            ->update(['icon' => $request->icon]);
-              
+                ->where('id', $request->restaurant_id)
+                ->update(['icon' => $request->icon]);
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
     public function remove_dish(Request $request)
@@ -85,22 +75,19 @@ class Restaurant extends Model
         try {
 
             $this->find($request->restaurant_id)->dishes()->find($request->ingredient_id)->delete();
-              
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
-    public function assign_dish(Request $request) {
-
-
+    public function assign_dish(Request $request)
+    {
         try {
 
             $restaurant = self::find($request->restaurant_id);
@@ -112,7 +99,4 @@ class Restaurant extends Model
             ], 401);
         }
     }
-
-
-
 }

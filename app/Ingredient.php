@@ -42,36 +42,30 @@ class Ingredient extends Model
         try {
 
             if ($request->admin_key == "saddfssf43132423432f") {
-            $ingredient = new self();
-            $ingredient->name = $request->ingredient_name;
-            $ingredient->save();
+                $ingredient = new self();
+                $ingredient->name = $request->ingredient_name;
+                $ingredient->save();
 
-            for ($i=0; $i < count($request->family_names); $i++) { 
-                $family = DB::table('ingredients_family')->where('name', $request->family_names[$i])->first();
-                $ingredient->families()->attach($family->id);
-            }      
-              
-            return 200;
+                for ($i = 0; $i < count($request->family_names); $i++) {
+                    $family = DB::table('ingredients_family')->where('name', $request->family_names[$i])->first();
+                    $ingredient->families()->attach($family->id);
+                }
 
-        } else {
-            return response()->json([
-                'message' => "access unautorized"
-            ], 401);
-        }
-
+                return 200;
+            } else {
+                return response()->json([
+                    'message' => "access unautorized"
+                ], 401);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
-
-    public function assign_family(Request $request) {
-
-
+    public function assign_family(Request $request)
+    {
         try {
 
             $ingredient = self::find($request->ingredient_id);
@@ -89,22 +83,19 @@ class Ingredient extends Model
         try {
 
             $this->find($request->ingredient_id)->families()->delete();
-           
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
-    public function assign_profile(Request $request) {
-
-
+    public function assign_profile(Request $request)
+    {
         try {
 
             $ingredient = self::find($request->ingredient_id);
@@ -117,30 +108,25 @@ class Ingredient extends Model
         }
     }
 
-
     public function remove_profile(Request $request)
     {
         try {
 
             $this->find($request->ingredient_id)->profiles()->find($request->profile_id)->delete();
-              
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
-    public function assign_dish(Request $request) {
-
-
+    public function assign_dish(Request $request)
+    {
         try {
-
             $ingredient = self::find($request->ingredient_id);
 
             $ingredient->dishes()->attach($request->dish_id);
@@ -156,17 +142,15 @@ class Ingredient extends Model
         try {
 
             $this->find($request->ingredient_id)->dishes()->delete();
-           
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
     public function rename(Request $request)
@@ -174,19 +158,17 @@ class Ingredient extends Model
         try {
 
             $affected = DB::table('ingredients')
-            ->where('id', $request->ingredient_id)
-            ->update(['name' => $request->name]);
-              
+                ->where('id', $request->ingredient_id)
+                ->update(['name' => $request->name]);
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
     public function change_description(Request $request)
@@ -194,19 +176,17 @@ class Ingredient extends Model
         try {
 
             $affected = DB::table('ingredients')
-            ->where('id', $request->ingredient_id)
-            ->update(['description' => $request->description]);
-              
+                ->where('id', $request->ingredient_id)
+                ->update(['description' => $request->description]);
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
     public function change_family(Request $request)
@@ -214,17 +194,15 @@ class Ingredient extends Model
         try {
 
             $affected = DB::table('ingredients')
-            ->where('id', $request->ingredient_id)
-            ->update(['name' => $request->name]);
-              
-            return 200;      
+                ->where('id', $request->ingredient_id)
+                ->update(['name' => $request->name]);
+
+            return 200;
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
     public function get_my_ingredients(Request $request)
@@ -232,80 +210,54 @@ class Ingredient extends Model
         try {
 
             $profile = DB::table('profiles')
-            ->where('name', $request->name)
-            ->first();
+                ->where('name', $request->name)
+                ->first();
 
-              
-            return $profile->ingredients()->get();     
+            return $profile->ingredients()->get();
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
-public function get_listed_ingredients(Request $request)
-{
-        
-$user_inv = new User();
-$user = $user_inv->get_logged_user($request);
+    public function get_listed_ingredients(Request $request)
+    {
 
-$array_ingredients_names = [];
+        $user_inv = new User();
+        $user = $user_inv->get_logged_user($request);
 
-$ingredients = Ingredient::all();
+        $array_ingredients_names = [];
 
-for ($i=0; $i < count($ingredients); $i++) {
-    array_push($array_ingredients_names, $ingredients[$i]->name);
-}
+        $ingredients = Ingredient::all();
 
-$families = Ingredient_Family::all();
-
-$rara = [];
-
-for ($i=0; $i < count($families); $i++) { 
-
-    for ($o=0; $o < count($array_ingredients_names); $o++) {
-
-        $family_taked_from_ingredients = $ingredients[$o]->families()->get();
-
-        for ($u=0; $u < count($family_taked_from_ingredients); $u++) { 
-
-            if ($family_taked_from_ingredients[$u]->name == $families[$i]->name){
-                
-              
-                array_push($rara, $ingredients[$o]);               
-
-            }
-            
+        for ($i = 0; $i < count($ingredients); $i++) {
+            array_push($array_ingredients_names, $ingredients[$i]->name);
         }
 
+        $families = Ingredient_Family::all();
 
-    }      
-      
-            $families[$i]->ingredients = $rara;     
+        $rara = [];
+
+        for ($i = 0; $i < count($families); $i++) {
+
+            for ($o = 0; $o < count($array_ingredients_names); $o++) {
+
+                $family_taked_from_ingredients = $ingredients[$o]->families()->get();
+
+                for ($u = 0; $u < count($family_taked_from_ingredients); $u++) {
+
+                    if ($family_taked_from_ingredients[$u]->name == $families[$i]->name) {
+
+
+                        array_push($rara, $ingredients[$o]);
+                    }
+                }
+            }
+
+            $families[$i]->ingredients = $rara;
             $rara = [];
-
-}
-
-
-return $families;
-
-
-// fuera del for
-
-
+        }
+        return $families;
     }
-      
-    
-
-    
-           
-
-    
-
-
-
-
 }

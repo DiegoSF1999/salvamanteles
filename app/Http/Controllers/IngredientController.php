@@ -33,7 +33,7 @@ class IngredientController extends Controller
 
         return $ingredient_inv->get_listed_ingredients($request);
     }
-    
+
 
     public function get_my_ingredients(Request $request)
     {
@@ -45,7 +45,7 @@ class IngredientController extends Controller
 
     public function remove(Request $request)
     {
-       DB::delete('delete from ingredients where id = ' . $request->ingredient_id);
+        DB::delete('delete from ingredients where id = ' . $request->ingredient_id);
     }
 
     /**
@@ -116,8 +116,8 @@ class IngredientController extends Controller
         return $ingredient_inv->remove_profile($request);
     }
 
-  
- 
+
+
     /**
      * Display the specified resource.
      *

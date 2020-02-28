@@ -18,7 +18,7 @@ class Ingredient_Family extends Model
 
     public function ingredients()
     {
-        return $this->belongsToMany('App\Ingredient', 'ingredients_from_family', 'ingredient_family_id' , 'ingredient_id')->withTimestamps();
+        return $this->belongsToMany('App\Ingredient', 'ingredients_from_family', 'ingredient_family_id', 'ingredient_id')->withTimestamps();
     }
 
 
@@ -31,21 +31,18 @@ class Ingredient_Family extends Model
                 $ingredient_family = new self();
                 $ingredient_family->name = $request->family_name;
                 $ingredient_family->save();
-                  
+
                 return 200;
             } else {
                 return response()->json([
                     'message' => "access unautorized"
                 ], 401);
             }
-                
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
 
@@ -54,20 +51,19 @@ class Ingredient_Family extends Model
         try {
 
             $affected = DB::table('ingredients_family')
-            ->where('id', $request->ingredient_family_id)
-            ->update(['name' => $request->name]);
-              
-            return 200;       
+                ->where('id', $request->ingredient_family_id)
+                ->update(['name' => $request->name]);
+
+            return 200;
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
 
-    public function assign_ingredient(Request $request) {
+    public function assign_ingredient(Request $request)
+    {
 
 
         try {
@@ -77,7 +73,6 @@ class Ingredient_Family extends Model
             $family->ingredients()->attach($request->ingredient_id);
 
             return 200;
-
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
@@ -91,18 +86,14 @@ class Ingredient_Family extends Model
         try {
 
             $this->find($request->ingredient_family_id)->ingredients()->find($request->ingredient_id)->delete();
-              
+
             return response()->json([
-               200
-            ], 200);       
+                200
+            ], 200);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
-
-
 }

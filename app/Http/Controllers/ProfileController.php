@@ -87,7 +87,7 @@ class ProfileController extends Controller
         return $ingredient_inv->assign_ingredient($request);
     }
 
-    
+
     /**
      * Display the specified resource.
      *

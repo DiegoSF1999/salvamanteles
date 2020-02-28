@@ -42,31 +42,30 @@ class User extends Model
 
             $profile = Profile::find($profile->id);
 
-            return $this->getTokenFromUser($user);        
+            return $this->getTokenFromUser($user);
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "email already used"
             ], 401);
-       }
+        }
     }
+    
     public function login(Request $request)
     {
         try {
             $user = User::where('email', $request->email)->first();
-           if (Hash::check($request->password, $user->password))
-           {
-            return $this->getTokenFromUser($user);
-           } else {
-            return response()->json([
-                'message' => "wrong data"
-            ], 401);
-           }
+            if (Hash::check($request->password, $user->password)) {
+                return $this->getTokenFromUser($user);
+            } else {
+                return response()->json([
+                    'message' => "wrong data"
+                ], 401);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
         }
-        
     }
 
     public function recover_password(Request $request)
@@ -77,7 +76,7 @@ class User extends Model
                 return response()->json([
                     'message' => "email not found"
                 ], 401);
-            } else  {
+            } else {
                 $new_password = str_random(8);
                 $hashed_random_password = Hash::make($new_password);
                 User::where('id', $user->id)->update(['password' => $hashed_random_password]);
@@ -89,30 +88,24 @@ class User extends Model
                 $headers = 'From: salvamantelestfg@cev.com' . "\r\n" .
                     'Reply-To: ' . $to . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
-                
+
                 mail($to, $subject, $message, $headers);
 
                 return 200;
-
             }
-
-           
-       } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return response()->json([
                 'message' => "email not found"
             ], 401);
         }
-        
-
-
     }
-    
+
     private function getTokenFromUser($user)
     {
         $token_inv = new Token();
         $token = $token_inv->encode_token($user->email, $user->changed);
         return response()->json([
-           'token' => $token
+            'token' => $token
         ], 200);
     }
 
@@ -130,29 +123,22 @@ class User extends Model
 
         try {
             $user = User::get_logged_user($request);
-        if (Hash::check($request->password, $user->password))
-        {
-         $hashed_new_password = Hash::make($request->new_password);
-         User::where('id', $user->id)->update(['password' => $hashed_new_password]);
-         User::where('id', $user->id)->update(['changed' => ($user->changed + 1)]);
-         $user = User::get_logged_user($request);
-        return $this->getTokenFromUser($user);
-
-        } else {
-         return response()->json([
-             'message' => "wrong data"
-         ], 401);
-        }
-            
+            if (Hash::check($request->password, $user->password)) {
+                $hashed_new_password = Hash::make($request->new_password);
+                User::where('id', $user->id)->update(['password' => $hashed_new_password]);
+                User::where('id', $user->id)->update(['changed' => ($user->changed + 1)]);
+                $user = User::get_logged_user($request);
+                return $this->getTokenFromUser($user);
+            } else {
+                return response()->json([
+                    'message' => "wrong data"
+                ], 401);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
         }
-        
-        
-
-
     }
 
     public function remove(Request $request)
@@ -162,22 +148,17 @@ class User extends Model
             if ($request->admin_key == "saddfssf43132423432f") {
 
                 $user =  User::find($request->user_id)->delete();
-              
-                return 200;    
+
+                return 200;
             } else {
                 return response()->json([
                     'message' => "access unautorized"
                 ], 401);
             }
-
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => "wrong data"
             ], 401);
-       }
-    
-
+        }
     }
-
-
 }

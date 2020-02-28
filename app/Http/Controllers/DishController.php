@@ -29,10 +29,10 @@ class DishController extends Controller
 
     public function remove(Request $request)
     {
-       DB::delete('delete from dishes where id = ' . $request->dish_id);
+        DB::delete('delete from dishes where id = ' . $request->dish_id);
     }
 
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -82,8 +82,8 @@ class DishController extends Controller
         return $dish_inv->assign_ingredient($request);
     }
 
-    
-    
+
+
     /**
      * Display the specified resource.
      *

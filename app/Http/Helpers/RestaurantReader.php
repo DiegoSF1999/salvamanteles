@@ -8,7 +8,6 @@ class RestaurantReader
 {
     function __construct()
     {
-        
     }
     public function FileReader()
     {
