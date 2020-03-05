@@ -216,7 +216,7 @@ class Profile extends Model
 
         $check = true;
 
-   for ($i=0; $i < count($all_dishes_ids); $i++) { 
+   for ($i=0; $i < count($all_dishes_ids); $i++) {
       
         $check = true;
 
@@ -232,9 +232,47 @@ class Profile extends Model
               array_push($Listed, $all_dishes[$i]);
             }
 
+    } 
+
+    $all_restaurants = Restaurant::all();
+
+    $restaurant_dishes_def = [];
+    for ($i=0; $i < count($all_restaurants); $i++) {
+
+        $restaurant = Restaurant::where('name', $all_restaurants[$i]->name)->first();
+
+        $restaurant_dishes = $restaurant->dishes()->get();
+        
+        for ($o=0; $o < count($restaurant_dishes); $o++) { 
+
+                for ($u=0; $u < count($Listed); $u++) { 
+
+                                                                  
+                    if ($restaurant_dishes[$o]->id == $Listed[$u]->id) {
+                        
+                        array_push($restaurant_dishes_def, $restaurant_dishes[$o]);
+
+                    }
+
+
+
+                }
+
+
+        }
+
+  
+        $all_restaurants[$i]->dishes = $restaurant_dishes_def;
+        $restaurant_dishes_def = [];
+
+
     }
-                
-        return $Listed;
+
+
+                return $all_restaurants;
+        return $dump;
+
+       // return $Listed;
     
 
     }
