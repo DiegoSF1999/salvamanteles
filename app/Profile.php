@@ -160,49 +160,84 @@ class Profile extends Model
 
         $profile = Profile::where('name', $request->name)->where('user_id', $user->id)->first();
 
-        $array_ingredients_names = [];
 
-        $profile_ingredients = $profile->ingredients()->get();
+        $Listed = [];
 
-        for ($i = 0; $i < count($profile_ingredients); $i++) {
-            array_push($array_ingredients_names, $profile_ingredients[$i]->name);
+        $all_dishes = Dish::all();
+
+        $all_dishes_ids = [];
+
+        for ($i=0; $i < count($all_dishes); $i++) { 
+            array_push($all_dishes_ids, $all_dishes[$i]->id);
         }
 
-        $prohibited_ingredients = [];
+        $prohibited_ingredients = $profile->ingredients()->get();
 
-        for ($i = 0; $i < count($profile_ingredients); $i++) {
+        $prohibited_ingredients_id = [];
 
-            array_push($prohibited_ingredients, $profile_ingredients[$i]->dishes()->get()[0]->name);
+        if (count($prohibited_ingredients) == 0) {
+            return 401;
+        } else {
+
+    
+        for ($i=0; $i < count($prohibited_ingredients); $i++) { 
+            array_push($prohibited_ingredients_id, $prohibited_ingredients[$i]->id);
         }
 
-        $prohibited_ingredients = array_unique($prohibited_ingredients);
-
-        $finaldishes = Dish::whereNotIn('name', $prohibited_ingredients)->get();
-
-        $restaurants = Restaurant::all();
-
-        $rara = [];
-
-        for ($i = 0; $i < count($restaurants); $i++) {
-
-            for ($o = 0; $o < count($finaldishes); $o++) {
-
-                $dish_restaurants = $finaldishes[$o]->restaurants()->get();
-
-                for ($u = 0; $u < count($dish_restaurants); $u++) {
-
-                    if ($dish_restaurants[$u]->name == $restaurants[$i]->name) {
+        // ya tenemos todos los ids de platos en all_dishes_ids y de los ingreidentes prohibidos en prohibited_ingredients_id
+        // ahora hay que obtener los platos a partir de los ingredientes
 
 
-                        array_push($rara, $finaldishes[$o]);
-                    }
-                }
+        $prohibited_dishes = [];
+        
+        if (count($prohibited_ingredients_id) == 0 ) {
+            return 401;
+        }
+
+        $prohibited_dishes_id = [];
+
+        for ($i=0; $i < count($prohibited_ingredients_id); $i++) { 
+            
+            $data = DB::select('SELECT dishes.* from dishes, dishes_containing_ingredients WHERE dishes.id = dishes_containing_ingredients.dish_id and dishes_containing_ingredients.ingredient_id = ' . $prohibited_ingredients_id[$i]);
+        
+            for ($o=0; $o < count($data); $o++) { 
+                
+                array_push($prohibited_dishes_id, $data[$o]->id);
+
             }
 
-            $restaurants[$i]->dishes = $rara;
-            $rara = [];
         }
 
-        return $restaurants;
+        $prohibited_dishes_id = array_unique($prohibited_dishes_id);
+
+        // $prohibited_dishes_id son los ids de los platos que NO puede tomar
+
+        // ya tenemos en all_dishes_ids todos los ids de los platos y en prohibited_dishes_id los ids que NO puede tomar
+
+        $check = true;
+
+   for ($i=0; $i < count($all_dishes_ids); $i++) { 
+      
+        $check = true;
+
+            foreach ($prohibited_dishes_id as $key => $value) {           
+            
+                if ($all_dishes_ids[$i] == $value) {
+                    $check = false;
+                }
+
+            }
+
+            if ($check) {
+              array_push($Listed, $all_dishes[$i]);
+            }
+
     }
+                
+        return $Listed;
+    
+
+    }
+
+}
 }
