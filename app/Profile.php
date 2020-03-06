@@ -175,8 +175,27 @@ class Profile extends Model
 
         $prohibited_ingredients_id = [];
 
+        $all_restaurants = Restaurant::all();
+
+        // si no tiene ningun ingrediente devuelve los restaurantes con todos los platos
+
         if (count($prohibited_ingredients) == 0) {
-            return 401;
+
+            
+                            for ($i=0; $i < count($all_restaurants); $i++) {
+
+                                $restaurant = Restaurant::where('name', $all_restaurants[$i]->name)->first();
+                        
+                                $restaurant_dishes = $restaurant->dishes()->get();
+                                
+                                $all_restaurants[$i]->dishes =  $restaurant_dishes;                  
+                        
+                            }
+
+
+                            return $all_restaurants;
+
+
         } else {
 
     
@@ -189,11 +208,7 @@ class Profile extends Model
 
 
         $prohibited_dishes = [];
-        
-        if (count($prohibited_ingredients_id) == 0 ) {
-            return 401;
-        }
-
+     
         $prohibited_dishes_id = [];
 
         for ($i=0; $i < count($prohibited_ingredients_id); $i++) { 
@@ -234,9 +249,11 @@ class Profile extends Model
 
     } 
 
-    $all_restaurants = Restaurant::all();
+
 
     $restaurant_dishes_def = [];
+
+    // aqui añade a all_restaurants los platos que si puede tomar
     for ($i=0; $i < count($all_restaurants); $i++) {
 
         $restaurant = Restaurant::where('name', $all_restaurants[$i]->name)->first();
@@ -270,9 +287,6 @@ class Profile extends Model
 
 
                 return $all_restaurants;
-        return $dump;
-
-       // return $Listed;
     
 
     }
