@@ -1,3 +1,3 @@
-Welcome to Salvamanteles, <strong>{{ $name }}</strong>,
+Welcome to Salvamanteles, <strong>{{$name}}</strong>,
 <br>
 {{$body}}

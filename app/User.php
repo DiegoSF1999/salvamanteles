@@ -90,20 +90,20 @@ class User extends Model
                 User::where('id', $user->id)->update(['password' => $hashed_random_password]);
                 User::where('id', $user->id)->update(['changed' => ($user->changed + 1)]);
 
-                $to      = $user->email;
-                $subject = 'password reset bienestapp';
-                $message = 'the new password is: ' . $new_password;
-                $headers = 'From: salvamantelestfg@gmail.com' . "\r\n" .
-                    'Reply-To: ' . $to . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
-
-                mail($to, $subject, $message, $headers);
+                $to_name = $user->name;
+                $to_email = $user->email;
+                $data = array('body' => "Here you have your new password: " . $new_password . "\n\n" . "Thanks for using our app." . "\n\n" . 'The Salvamanteles team.');
+                Mail::send('emails.password', $data, function ($message) use ($to_name, $to_email) {
+                    $message->to($to_email, $to_name)
+                        ->subject('Password reset');
+                    $message->from('salvamantelesapp@gmail.com');
+                });
 
                 return 200;
             }
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => "email not found"
+                'message' => "not possible to access"
             ], 401);
         }
     }
