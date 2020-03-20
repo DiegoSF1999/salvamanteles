@@ -26,7 +26,7 @@ class User extends Model
 
     public function register(Request $request)
     {
-        try {
+       // try {
             $user = new self();
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
@@ -44,18 +44,18 @@ class User extends Model
             $to_name = $user->name;
             $to_email = $user->email;
             $data = array('name' => $profile->name, 'body' => "Welcome to Salvamanteles" . $user->name . "\n\n" . "We hope you enjoy our app." . "\n\n" . 'The Salvamanteles team.');
-            Mail::send('emails.welcome', $data, function ($message) use ($to_name, $to_email) {
+          /*  Mail::send('emails.welcome', $data, function ($message) use ($to_name, $to_email) {
                 $message->to($to_email, $to_name)
                     ->subject('Welcome to Salvamanteles');
                 $message->from('salvamantelesapp@gmail.com');
-            });
+            });*/
 
             return $this->getTokenFromUser($user);
-        } catch (\Throwable $th) {
+      /*  } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th->getMessage()
             ], 401);
-        }
+        } */
     }
 
     public function login(Request $request)
