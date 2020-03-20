@@ -53,7 +53,7 @@ class User extends Model
             return $this->getTokenFromUser($user);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => $th->getMessages()
+                'message' => $th->getMessage()
             ], 401);
         }
     }
