@@ -9,6 +9,7 @@ use App\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class User extends Model
 {
@@ -32,15 +33,22 @@ class User extends Model
             $user->changed = 0;
             $user->save();
 
-
             $profile = new Profile();
 
             $profile->name = $request->name;
             $profile->user_id = $user->id;
             $profile->save();
 
-
             $profile = Profile::find($profile->id);
+
+            $to_name = $user->name;
+            $to_email = $user->email;
+            $data = array('name' => $profile->name, 'body' => "Welcome to Salvamanteles" . $user->name . "\n\n" . "We hope you enjoy our app." . "\n\n" . 'The Salvamanteles team.');
+            Mail::send('emails.welcome', $data, function ($message) use ($to_name, $to_email) {
+                $message->to($to_email, $to_name)
+                    ->subject('Welcome to Salvamanteles');
+                $message->from('salvamantelesapp@gmail.com');
+            });
 
             return $this->getTokenFromUser($user);
         } catch (\Throwable $th) {
@@ -49,7 +57,7 @@ class User extends Model
             ], 401);
         }
     }
-    
+
     public function login(Request $request)
     {
         try {
@@ -82,20 +90,20 @@ class User extends Model
                 User::where('id', $user->id)->update(['password' => $hashed_random_password]);
                 User::where('id', $user->id)->update(['changed' => ($user->changed + 1)]);
 
-                $to      = $user->email;
-                $subject = 'password reset bienestapp';
-                $message = 'the new password is: ' . $new_password;
-                $headers = 'From: salvamantelestfg@cev.com' . "\r\n" .
-                    'Reply-To: ' . $to . "\r\n" .
-                    'X-Mailer: PHP/' . phpversion();
-
-                mail($to, $subject, $message, $headers);
+                $to_name = $user->name;
+                $to_email = $user->email;
+                $data = array('body' => "Here you have your new password: " . $new_password . "\n\n" . "Thanks for using our app." . "\n\n" . 'The Salvamanteles team.');
+                Mail::send('emails.password', $data, function ($message) use ($to_name, $to_email) {
+                    $message->to($to_email, $to_name)
+                        ->subject('Password reset');
+                    $message->from('salvamantelesapp@gmail.com');
+                });
 
                 return 200;
             }
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => "email not found"
+                'message' => "not possible to access"
             ], 401);
         }
     }
