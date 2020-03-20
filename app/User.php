@@ -45,7 +45,7 @@ class User extends Model
             return $this->getTokenFromUser($user);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => "email already used"
+                'message' => $th->getMessages()
             ], 401);
         }
     }
