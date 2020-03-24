@@ -26,7 +26,7 @@ class User extends Model
 
     public function register(Request $request)
     {
-       // try {
+        try {
             $user = new self();
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
@@ -51,11 +51,11 @@ class User extends Model
             });*/
 
             return $this->getTokenFromUser($user);
-      /*  } catch (\Throwable $th) {
+        } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th->getMessage()
             ], 401);
-        } */
+        } 
     }
 
     public function login(Request $request)
@@ -93,11 +93,11 @@ class User extends Model
                 $to_name = $user->name;
                 $to_email = $user->email;
                 $data = array('body' => "Here you have your new password: " . $new_password . "\n\n" . "Thanks for using our app." . "\n\n" . 'The Salvamanteles team.');
-                Mail::send('emails.password', $data, function ($message) use ($to_name, $to_email) {
+              /*  Mail::send('emails.password', $data, function ($message) use ($to_name, $to_email) {
                     $message->to($to_email, $to_name)
                         ->subject('Password reset');
                     $message->from('salvamantelesapp@gmail.com');
-                });
+                });*/
 
                 return 200;
             }
