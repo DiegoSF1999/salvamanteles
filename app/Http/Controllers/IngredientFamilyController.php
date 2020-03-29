@@ -29,7 +29,7 @@ class IngredientFamilyController extends Controller
 
     public function remove(Request $request)
     {
-        DB::delete('delete from ingredients_family where id = ' . $request->ingredient_family_id);
+        
     }
 
     /**

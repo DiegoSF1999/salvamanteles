@@ -131,7 +131,9 @@ class User extends Model
 
         try {
             $user = User::get_logged_user($request);
+        
             if (Hash::check($request->password, $user->password)) {
+
                 $hashed_new_password = Hash::make($request->new_password);
                 User::where('id', $user->id)->update(['password' => $hashed_new_password]);
                 User::where('id', $user->id)->update(['changed' => ($user->changed + 1)]);

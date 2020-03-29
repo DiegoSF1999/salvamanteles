@@ -213,8 +213,13 @@ class Profile extends Model
 
         for ($i=0; $i < count($prohibited_ingredients_id); $i++) { 
             
-            $data = DB::select('SELECT dishes.* from dishes, dishes_containing_ingredients WHERE dishes.id = dishes_containing_ingredients.dish_id and dishes_containing_ingredients.ingredient_id = ' . $prohibited_ingredients_id[$i]);
+           // $data = DB::select('SELECT dishes.* from dishes, dishes_containing_ingredients WHERE dishes.id = dishes_containing_ingredients.dish_id and dishes_containing_ingredients.ingredient_id = ' . $prohibited_ingredients_id[$i]);
         
+            $data = DB::table('dishes')->join('dishes_containing_ingredients', 'dishes_containing_ingredients.dish_id', '=', 'dishes.id')
+                                        ->select('dishes.*')
+                                        ->where('dishes_containing_ingredients.ingredient_id', $prohibited_ingredients_id[$i])
+                                        ->get();
+
             for ($o=0; $o < count($data); $o++) { 
                 
                 array_push($prohibited_dishes_id, $data[$o]->id);

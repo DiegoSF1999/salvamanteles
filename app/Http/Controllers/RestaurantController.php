@@ -29,7 +29,6 @@ class RestaurantController extends Controller
 
     public function remove(Request $request)
     {
-        DB::delete('delete from restaurants where id = ' . $request->restaurant_id);
     }
 
     /**

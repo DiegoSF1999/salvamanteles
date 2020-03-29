@@ -29,7 +29,7 @@ class DishController extends Controller
 
     public function remove(Request $request)
     {
-        DB::delete('delete from dishes where id = ' . $request->dish_id);
+       
     }
 
 

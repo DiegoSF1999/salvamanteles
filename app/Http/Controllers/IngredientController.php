@@ -45,7 +45,7 @@ class IngredientController extends Controller
 
     public function remove(Request $request)
     {
-        DB::delete('delete from ingredients where id = ' . $request->ingredient_id);
+      
     }
 
     /**

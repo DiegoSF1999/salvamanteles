@@ -46,6 +46,8 @@ class UserController extends Controller
 
     public function remove(Request $request)
     {
+
+        /*
         $users_inv = new User();
 
         $user = $users_inv->get_logged_user($request);
@@ -58,5 +60,8 @@ class UserController extends Controller
                 'message' => "access unautorized"
             ], 401);
         }
+
+*/
+
     }
 }
